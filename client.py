@@ -13,17 +13,29 @@ while(True):
             num_partitions=len(network)
             f=open(filename,'r') 
             stats = os.stat(filename)
-            file_size = stats.st_size
+            file_size = stats.st_size#byte size representation
             if(file_size>=num_partitions):
                 partition_size = file_size//num_partitions
-                remaining_bytes = file_size-partition_size*num_partitions
-                for node in network:
-                    if(node==network[-1]):
-                        data = f.read(partition_size+remaining_bytes)
+                # remaining_bytes = file_size-partition_size*num_partitions
+                # size = 0
+                for i in range (len(network)):  
+                    data = ''
+                    if i!=len(network)-1:
+                        while len(data.encode('utf-8'))<partition_size:
+                            data+=f.readline()
                     else:
-                        data = f.read(partition_size)
-                    myobj={"data":data,"filename":filename,"node":node}
-                    url=f'http://127.0.0.1:{node}/write'
+                        data = ''
+                        flag = 1
+                        while len(data.encode('utf-8'))<partition_size and flag !=0:
+                            line = f.readline()
+                            if line == '':
+                                flag = 0
+                            else:
+                                data+=line 
+    
+                    print(data)
+                    myobj={"data":data,"filename":filename,"node":network[i]}
+                    url=f'http://127.0.0.1:{network[i]}/write'
                     x = requests.post(url, json = myobj)
                     if x.status_code==201:
                         msg=x.json()
@@ -42,6 +54,7 @@ while(True):
                     if x.status_code==201:
                         msg=x.json()
                         print(msg['message'])
+            f.close()
 
             
                 
