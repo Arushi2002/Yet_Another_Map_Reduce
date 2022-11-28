@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
-import requests
+import sys
+randport = int(sys.argv[1])
 
 #Creating a Web App
 app = Flask(__name__)
@@ -15,7 +16,7 @@ def write():
     f = open(partition_file_name, "w")
     f.write(data)
     f.close()
-    response={'message':f'Data successfully written to {partition_file_name}'}    
+    response={'message':f'Data successfully written to {partition_file_name}','partition_file_name':partition_file_name}    
     return jsonify(response), 201
 
 @app.route("/read",methods=['POST'])
@@ -28,4 +29,4 @@ def read():
     response={'data':data}
     return jsonify(response),201
 
-app.run(host='0.0.0.0',port=5002)
+app.run(host='0.0.0.0',port = randport)

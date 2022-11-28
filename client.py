@@ -33,7 +33,7 @@ while(True):
                             else:
                                 data+=line 
     
-                    print(data)
+                    # print(data)
                     myobj={"data":data,"filename":filename,"node":network[i]}
                     url=f'http://127.0.0.1:{network[i]}/write'
                     x = requests.post(url, json = myobj)
