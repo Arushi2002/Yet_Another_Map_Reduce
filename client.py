@@ -2,6 +2,18 @@ from flask import Flask, jsonify, request
 import requests
 import json
 import os
+
+#Getting number of nodes
+response=requests.get(f'http://127.0.0.1:5000/nodes')
+if response.status_code==200:
+    node = int(input("Enter the number of workers: "))
+    myobj={"workers":node}
+    url=f'http://127.0.0.1:5000/number'
+    x = requests.post(url, json = myobj)
+    if x.status_code==201:
+        msg=x.json()
+        print(msg['message'])
+
 #Taking input from user 
 while(True):
     oper = int(input("Enter the operation number that needs to be performed:\n 1. WRITE \n 2. READ \n 3. MAP REDUCE\n 4. EXIT\n "))
@@ -75,21 +87,22 @@ while(True):
         print()
 
     elif oper==3:
-        filename=input("Enter the name of the input file: ")
-        filename=input("Enter the name of the mapper file: ")
-        filename=input("Enter the name of the reducer file: ")
+        input_file=input("Enter the name of the input file: ")
+        mapper=input("Enter the name of the mapper file: ")
+        #mareducer=input("Enter the name of the reducer file: ")
 
-        response = requests.get(f'http://127.0.0.1:5000/map')
+        response=requests.get(f'http://127.0.0.1:5000/map_ack')
         if response.status_code==200:
             network=response.json()['network']
-
+            
+            for node in network:
+                myobj={"input_file":f'partition_{input_file[:-4]}_node_{node}.txt',"mapper":mapper}
+                url=f'http://127.0.0.1:{node}/mapper'
+                x = requests.post(url, json = myobj)
+                if x.status_code==201:
+                    msg=x.json()
+                    print(msg['message'])
     elif oper==4:
         exit()
     else:
         print("Invalid operation!")
-            
-
-
-        
-
-
