@@ -79,6 +79,10 @@ while(True):
         filename=input("Enter the name of the mapper file: ")
         filename=input("Enter the name of the reducer file: ")
 
+        response = requests.get(f'http://127.0.0.1:5000/map')
+        if response.status_code==200:
+            network=response.json()['network']
+
     elif oper==4:
         exit()
     else:
