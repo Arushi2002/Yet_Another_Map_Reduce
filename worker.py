@@ -87,6 +87,45 @@ def get_partition():
     return jsonify(response),201
 
 
+def reduce(input_file, reducer_file):
+    output_file = "sample_reduce.txt"
+    print(output_file)
+    red_output = open(output_file, "a")
+
+    f = open(input_file, "r")
+    file_list = []
+
+    for i in f.readlines():
+        file_list.append(i)
+    
+    file_list.sort()
+    print("file_list -",file_list)
+
+    #with open(input_file, 'r') as f:
+    for i in file_list:
+        #for line in f:
+        p = Popen(["python", reducer_file],  stdin=PIPE, stdout=PIPE)
+        output, err = p.communicate(i.encode('utf-8'))
+    res = output.decode('utf-8')
+    res = res.split("\r")
+    print("res =", res)
+    for val in res:
+        red_output.write(val)
+        #d.write("\n")
+    f.close()
+    red_output.close()
+
+@app.route("/reducer", methods = ['POST'])
+def reducer():
+    json = request.get_json()
+    print("json =",json)
+    input_file = json["input_file"]
+    reducer = json["reducer"]
+    reduce(input_file, reducer)
+    response={'message':f'Data successfully reduced into {input_file[:-4]}_reduce.txt'}
+    return jsonify(response),201
+
+
 # @app.route("/shuffle",methods=['POST'])
 # def shuffle():
 #     json=request.get_json()

@@ -63,6 +63,7 @@ def map_reduce():
     response={'network':worker_ports}
     input_file = json_obj["input_file"]
     mapper = json_obj["mapper"]
+    reducer = json_obj["reducer"]
     #variable that checks if all workers returned ACK
     all_ACK=1
     for i,node in enumerate(worker_ports):
@@ -84,8 +85,20 @@ def map_reduce():
             if response_shuffle.status_code==201:
                 f = open("log_file.txt", "a")
                 f.write("Shuffle operation successful\n")
+                
                 msg=response_shuffle.json()
                 print(msg['message'])
+
+                #Sort and reduce
+                for i,node in enumerate(worker_ports):
+                    red_obj = {"input_file":f'partition_{i}_{input_file[:-4]}_shuffle.txt',"reducer":reducer}
+                    url=f'http://127.0.0.1:{node}/reducer'
+                    response_reducer = requests.post(url, json = red_obj)
+                    if response_reducer.status_code==201:
+                        pass
+                    else:
+                        all_ACK=0
+
             else:
                 all_ACK=0
 
