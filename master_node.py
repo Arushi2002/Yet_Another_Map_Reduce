@@ -15,7 +15,7 @@ worker_ports = []
 for i in range(no_of_worker_nodes):
     rand_port = find_free_port()
     worker_ports.append(rand_port)
-    p = Popen("python3 worker.py {}".format(rand_port), shell=True)
+    p = Popen("python worker.py {}".format(rand_port), shell=True)
 
 
 #Creating a Web App

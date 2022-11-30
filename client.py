@@ -76,11 +76,11 @@ while(True):
         if response.status_code==200:
             network=response.json()['network']
             #print(network)
-        for node in network:
+        for i in range(len(network)):
             partition_file_name = f'partition_{i}_{filename[:-4]}.txt'
             myobj={'partition_file_name':partition_file_name}
             #print(partition_file_name)
-            response = requests.post(f'http://127.0.0.1:{node}/read',json=myobj)
+            response = requests.post(f'http://127.0.0.1:{network[i]}/read',json=myobj)
             if response.status_code==201:
                 data=response.json()
                 print(data['data'],end="")
