@@ -57,6 +57,9 @@ def mapper():
     response={'message':f'Data successfully mapped into {input_file[:-4]}_map.txt'}
     return jsonify(response),201
 
+def hash(s):
+    return len(s)
+
 def shuffle_write(input_file,reducers):
     shuffle_file = input_file[:-4] + "_map" + ".txt"
     print(shuffle_file)
