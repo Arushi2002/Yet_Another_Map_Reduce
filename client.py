@@ -97,6 +97,7 @@ while(True):
 
         if response.status_code==201:
             print("Map Stage completed")
+        
             # network=response.json()['network']
             
             # for node in network:

@@ -70,11 +70,20 @@ def map_reduce():
         url=f'http://127.0.0.1:{node}/mapper'
         response_mapper = requests.post(url, json = myobj)
         if response_mapper.status_code==201:
-            msg=response_mapper.json()
-            print(msg['message'])
+            pass
         else:
             all_ACK=0
-    
+    if all_ACK == 1:#mapper task run succesfully by all the workers
+        for i,node in enumerate(worker_ports):
+            myobj={"input_file":f'partition_{i}_{input_file[:-4]}.txt',"reducers":len(worker_ports)}#for now same as mappers will change later
+            url=f'http://127.0.0.1:{node}/shuffle'
+            response_shuffle = requests.post(url, json = myobj)
+            if response_shuffle.status_code==201:
+                msg=response_shuffle.json()
+                print(msg['message'])
+            else:
+                all_ACK=0
+
     # #variable that checks if all workers returned ACK in shuffle phase
     # all_ACK_shuffle=1
     # if map in all phases is successful master starts the shuffle phase
@@ -88,10 +97,7 @@ def map_reduce():
     #             print(msg['message'])
     #         else:
     #             all_ACK=0
-            
-    if(all_ACK):
-        f = open("log_file.txt", "a")
-        f.write("Map operation performed on all nodes\n")
+    response = "All done"
     return jsonify(response),201
 
 app.run(host='0.0.0.0',port=5000) 
