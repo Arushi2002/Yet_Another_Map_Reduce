@@ -51,14 +51,16 @@ def write():
     response={'network':worker_ports}
     return jsonify(response),200
 
-#map_ack
-@app.route("/map_ack",methods=['POST'])
-def map_ack():
+#map_reduce
+@app.route("/map_reduce",methods=['POST'])
+def map_reduce():
     #network=response.json()['network']
     json_obj=request.get_json()
     response={'network':worker_ports}
     input_file = json_obj["input_file"]
     mapper = json_obj["mapper"]
+    #variable that checks if all workers returned ACK
+    all_ACK=1
     for i,node in enumerate(worker_ports):
         myobj={"input_file":f'partition_{i}_{input_file[:-4]}.txt',"mapper":mapper}
         url=f'http://127.0.0.1:{node}/mapper'
@@ -66,8 +68,24 @@ def map_ack():
         if response_mapper.status_code==201:
             msg=response_mapper.json()
             print(msg['message'])
-        # else:
-        #     print(msg['message'])
+        else:
+            all_ACK=0
+    
+    # #variable that checks if all workers returned ACK in shuffle phase
+    # all_ACK_shuffle=1
+    # if map in all phases is successful master starts the shuffle phase
+    # if(all_ACK):
+    #     for i,node in enumerate(worker_ports):
+    #         myobj={"intermediate_mapper_file":f'partition_{i}_{input_file[:-4]}_map.txt'}
+    #         url=f'http://127.0.0.1:{node}/shuffle'
+    #         response_shuffle = requests.post(url, json = myobj)
+    #         if response_mapper.status_code==201:
+    #             msg=response_shuffle.json()
+    #             print(msg['message'])
+    #         else:
+    #             all_ACK=0
+            
+
     
     return jsonify(response),201
 

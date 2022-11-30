@@ -93,7 +93,7 @@ while(True):
 
         #response=requests.get(f'http://127.0.0.1:5000/map_ack')
         args_obj = {"input_file":input_file, "mapper":mapper}
-        response = requests.post('http://127.0.0.1:5000/map_ack', json=args_obj)
+        response = requests.post('http://127.0.0.1:5000/map_reduce', json=args_obj)
 
         if response.status_code==201:
             print("Map Stage completed")
@@ -106,6 +106,8 @@ while(True):
             #     if x.status_code==201:
             #         msg=x.json()
             #         print(msg['message'])
+
+           
         else:
             print("Map Failed")
     elif oper==4:
