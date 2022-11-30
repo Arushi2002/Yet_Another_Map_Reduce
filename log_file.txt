@@ -1,0 +1,3 @@
+Write performed successfully
+Read performed successfully
+Map operation performed on all nodes

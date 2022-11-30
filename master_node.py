@@ -43,12 +43,16 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 @app.route("/read",methods=['GET'])
 def read():
     response={'network':worker_ports}
+    f = open("log_file.txt", "a")
+    f.write("Read performed successfully\n")
     return jsonify(response),200
 
 #write
 @app.route("/write",methods=['GET'])
 def write():
     response={'network':worker_ports}
+    f = open("log_file.txt", "a")
+    f.write("Write performed successfully\n")
     return jsonify(response),200
 
 #map_reduce
@@ -85,8 +89,9 @@ def map_reduce():
     #         else:
     #             all_ACK=0
             
-
-    
+    if(all_ACK):
+        f = open("log_file.txt", "a")
+        f.write("Map operation performed on all nodes\n")
     return jsonify(response),201
 
 app.run(host='0.0.0.0',port=5000) 

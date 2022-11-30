@@ -89,7 +89,7 @@ while(True):
     elif oper==3:
         input_file=input("Enter the name of the input file: ")
         mapper=input("Enter the name of the mapper file: ")
-        #mareducer=input("Enter the name of the reducer file: ")
+        #reducer=input("Enter the name of the reducer file: ")
 
         #response=requests.get(f'http://127.0.0.1:5000/map_ack')
         args_obj = {"input_file":input_file, "mapper":mapper}
