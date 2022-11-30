@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request
 import sys
+from subprocess import Popen, PIPE
+
 randport = int(sys.argv[1])
 
 #Creating a Web App
@@ -12,7 +14,8 @@ def write():
     data=json["data"]
     filename=json["filename"][:-4]
     node=json["node"]
-    partition_file_name=f'partition_{filename}_node_{node}.txt'
+    partition_no = json["partition_no"]
+    partition_file_name=f'partition_{partition_no}_{filename}.txt'
     f = open(partition_file_name, "w")
     f.write(data)
     f.close()
@@ -29,7 +32,6 @@ def read():
     response={'data':data}
     return jsonify(response),201
 
-from subprocess import Popen, PIPE
 def map(input_file, mapper_file):
     output_file = input_file[:-4] + "_map" + ".txt"
     print(output_file)

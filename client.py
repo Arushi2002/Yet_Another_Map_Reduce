@@ -4,15 +4,15 @@ import json
 import os
 
 #Getting number of nodes
-response=requests.get(f'http://127.0.0.1:5000/nodes')
-if response.status_code==200:
-    node = int(input("Enter the number of workers: "))
-    myobj={"workers":node}
-    url=f'http://127.0.0.1:5000/number'
-    x = requests.post(url, json = myobj)
-    if x.status_code==201:
-        msg=x.json()
-        print(msg['message'])
+# response=requests.get(f'http://127.0.0.1:5000/nodes')
+# if response.status_code==200:
+#     node = int(input("Enter the number of workers: "))
+#     myobj={"workers":node}
+#     url=f'http://127.0.0.1:5000/number'
+#     x = requests.post(url, json = myobj)
+#     if x.status_code==201:
+#         msg=x.json()
+#         print(msg['message'])
 
 #Taking input from user 
 while(True):
@@ -46,7 +46,7 @@ while(True):
                                 data+=line 
     
                     # print(data)
-                    myobj={"data":data,"filename":filename,"node":network[i]}
+                    myobj={"data":data,"filename":filename,"node":network[i], 'partition_no':i}
                     url=f'http://127.0.0.1:{network[i]}/write'
                     x = requests.post(url, json = myobj)
                     if x.status_code==201:
@@ -60,7 +60,7 @@ while(True):
                     else:
                         #Some partitions be empty data
                         data = ""
-                    myobj={"data":data,"filename":filename,"node":node}
+                    myobj={"data":data,"filename":filename,"node":node, 'partition_no':i}
                     url=f'http://127.0.0.1:{node}/write'
                     x = requests.post(url, json = myobj)
                     if x.status_code==201:
@@ -77,7 +77,7 @@ while(True):
             network=response.json()['network']
             #print(network)
         for node in network:
-            partition_file_name = f'partition_{filename[:-4]}_node_{node}.txt'
+            partition_file_name = f'partition_{i}_{filename[:-4]}.txt'
             myobj={'partition_file_name':partition_file_name}
             #print(partition_file_name)
             response = requests.post(f'http://127.0.0.1:{node}/read',json=myobj)
@@ -91,17 +91,23 @@ while(True):
         mapper=input("Enter the name of the mapper file: ")
         #mareducer=input("Enter the name of the reducer file: ")
 
-        response=requests.get(f'http://127.0.0.1:5000/map_ack')
-        if response.status_code==200:
-            network=response.json()['network']
+        #response=requests.get(f'http://127.0.0.1:5000/map_ack')
+        args_obj = {"input_file":input_file, "mapper":mapper}
+        response = requests.post('http://127.0.0.1:5000/map_ack', json=args_obj)
+
+        if response.status_code==201:
+            print("Map Stage completed")
+            # network=response.json()['network']
             
-            for node in network:
-                myobj={"input_file":f'partition_{input_file[:-4]}_node_{node}.txt',"mapper":mapper}
-                url=f'http://127.0.0.1:{node}/mapper'
-                x = requests.post(url, json = myobj)
-                if x.status_code==201:
-                    msg=x.json()
-                    print(msg['message'])
+            # for node in network:
+            #     myobj={"input_file":f'partition_{input_file[:-4]}_node_{node}.txt',"mapper":mapper}
+            #     url=f'http://127.0.0.1:{node}/mapper'
+            #     x = requests.post(url, json = myobj)
+            #     if x.status_code==201:
+            #         msg=x.json()
+            #         print(msg['message'])
+        else:
+            print("Map Failed")
     elif oper==4:
         exit()
     else:
