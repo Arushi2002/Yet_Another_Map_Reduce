@@ -6,9 +6,13 @@ current_count = 0
 word = None
 
 for line in sys.stdin:
+    if not line:
+        break
     line = line.strip()
+    #print("line =", line)
 
     word, count = line.split(',')
+    #print("word, count -", word, count)
 
     try:
         count = int(count)
@@ -28,7 +32,6 @@ for line in sys.stdin:
 if current_word == word:
     print (current_word, current_count)
 
-#!/usr/bin/env python3
 # import sys
 
 # query_word = sys.argv[1]

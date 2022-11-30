@@ -3,16 +3,6 @@ import requests
 import json
 import os
 
-#Getting number of nodes
-# response=requests.get(f'http://127.0.0.1:5000/nodes')
-# if response.status_code==200:
-#     node = int(input("Enter the number of workers: "))
-#     myobj={"workers":node}
-#     url=f'http://127.0.0.1:5000/number'
-#     x = requests.post(url, json = myobj)
-#     if x.status_code==201:
-#         msg=x.json()
-#         print(msg['message'])
 
 #Taking input from user 
 while(True):

@@ -103,15 +103,24 @@ def reduce(input_file, reducer_file):
     
     file_list.sort()
     print("file_list -",file_list)
+    res2 = []
 
     #with open(input_file, 'r') as f:
-    for i in file_list:
-        #for line in f:
-        p = Popen(["python", reducer_file],  stdin=PIPE, stdout=PIPE)
-        output, err = p.communicate(i.encode('utf-8'))
+    
+    p = Popen("python3 {} < {}".format(reducer_file, input_file), shell=True, stdin=PIPE, stdout=PIPE)
+    #p = Popen(["python", reducer_file],  stdin=PIPE, stdout=PIPE)
+    output, err = p.communicate()
+    print("output, err =", output, err)
     res = output.decode('utf-8')
-    res = res.split("\r")
-    print("res =", res)
+    print("res -",res)
+    # for i in file_list:
+    #     #for line in f:
+    #     p = Popen(["python", reducer_file],  stdin=PIPE, stdout=PIPE)
+    #     output, err = p.communicate(i.encode('utf-8'))
+    #     res = output.decode('utf-8')
+    #     res = res.split("\n")
+    #     res2.append(res)
+    # print("res2 =", res2)
     for val in res:
         red_output.write(val)
         #d.write("\n")

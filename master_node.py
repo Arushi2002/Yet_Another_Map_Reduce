@@ -102,19 +102,6 @@ def map_reduce():
             else:
                 all_ACK=0
 
-    # #variable that checks if all workers returned ACK in shuffle phase
-    # all_ACK_shuffle=1
-    # if map in all phases is successful master starts the shuffle phase
-    # if(all_ACK):
-    #     for i,node in enumerate(worker_ports):
-    #         myobj={"intermediate_mapper_file":f'partition_{i}_{input_file[:-4]}_map.txt'}
-    #         url=f'http://127.0.0.1:{node}/shuffle'
-    #         response_shuffle = requests.post(url, json = myobj)
-    #         if response_mapper.status_code==201:
-    #             msg=response_shuffle.json()
-    #             print(msg['message'])
-    #         else:
-    #             all_ACK=0
     response = "All done"
     return jsonify(response),201
 
