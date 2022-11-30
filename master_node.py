@@ -73,12 +73,17 @@ def map_reduce():
             pass
         else:
             all_ACK=0
+
     if all_ACK == 1:#mapper task run succesfully by all the workers
+        f = open("log_file.txt", "a")
+        f.write("Map operation performed on all nodes\n")
         for i,node in enumerate(worker_ports):
             myobj={"input_file":f'partition_{i}_{input_file[:-4]}.txt',"reducers":len(worker_ports)}#for now same as mappers will change later
             url=f'http://127.0.0.1:{node}/shuffle'
             response_shuffle = requests.post(url, json = myobj)
             if response_shuffle.status_code==201:
+                f = open("log_file.txt", "a")
+                f.write("Shuffle operation successful\n")
                 msg=response_shuffle.json()
                 print(msg['message'])
             else:
