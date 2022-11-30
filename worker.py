@@ -57,8 +57,35 @@ def mapper():
     response={'message':f'Data successfully mapped into {input_file[:-4]}_map.txt'}
     return jsonify(response),201
 
-def get_partition(key,num_of_reducers):
-    return abs(hash(key)%num_of_reducers)
+def shuffle_write(input_file,reducers):
+    shuffle_file = input_file[:-4] + "_map" + ".txt"
+    print(shuffle_file)
+    d = open(shuffle_file, "r")
+    lines = d.readlines()
+    d.close()
+    for i in lines:
+        key = i.split()[0]
+        print(key)
+        hashval = abs(hash(key)%reducers)
+        print(hashval)
+        output_file  = input_file[:10] + str(hashval)+input_file[11:-4]+"_shuffle" + ".txt"
+        print(output_file)
+        f = open(output_file, "a")
+        f.write(i)
+        f.close()
+    return
+
+
+@app.route("/shuffle",methods = ['POST'])
+def get_partition():
+    json=request.get_json()
+    print(json)
+    input = json["input_file"]
+    num_of_reducers = json["reducers"]
+    shuffle_write(input,num_of_reducers)
+    response={'message':f'Data successfully shuffled'}
+    return jsonify(response),201
+
 
 # @app.route("/shuffle",methods=['POST'])
 # def shuffle():
