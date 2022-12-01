@@ -110,7 +110,6 @@ def reduce(input_file, reducer_file):
     f.close()
 
 
-
     res2 = []
 
     #with open(input_file, 'r') as f:
