@@ -88,19 +88,19 @@ def map_reduce():
                 
                 msg=response_shuffle.json()
                 print(msg['message'])
-
-                #Sort and reduce
-                for i,node in enumerate(worker_ports):
-                    red_obj = {"input_file":f'partition_{i}_{input_file[:-4]}_shuffle.txt',"reducer":reducer}
-                    url=f'http://127.0.0.1:{node}/reducer'
-                    response_reducer = requests.post(url, json = red_obj)
-                    if response_reducer.status_code==201:
-                        pass
-                    else:
-                        all_ACK=0
-
+            else:
+                all_ACK = 0
+    if all_ACK == 1:
+        #Sort and reduce
+        for i,node in enumerate(worker_ports):
+            red_obj = {"input_file":f'partition_{i}_{input_file[:-4]}_shuffle.txt',"reducer":reducer}
+            url=f'http://127.0.0.1:{node}/reducer'
+            response_reducer = requests.post(url, json = red_obj)
+            if response_reducer.status_code==201:
+                pass
             else:
                 all_ACK=0
+
 
     response = "All done"
     return jsonify(response),201

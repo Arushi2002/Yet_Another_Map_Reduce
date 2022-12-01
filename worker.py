@@ -59,7 +59,6 @@ def mapper():
 
 def hash(s):
     return len(s)
-
 def shuffle_write(input_file,reducers):
     shuffle_file = input_file[:-4] + "_map" + ".txt"
     print(shuffle_file)
@@ -97,22 +96,33 @@ def reduce(input_file, reducer_file):
 
     f = open(input_file, "r")
     file_list = []
-
-    for i in f.readlines():
+    lines = f.readlines()
+    f.close()
+    for i in lines:
         file_list.append(i)
+        
     
     file_list.sort()
     print("file_list -",file_list)
+    f = open(input_file, "w")
+    for i in file_list:
+        f.write(i)
+    f.close()
+
+
+
     res2 = []
 
     #with open(input_file, 'r') as f:
     
-    p = Popen("python3 {} < {}".format(reducer_file, input_file), shell=True, stdin=PIPE, stdout=PIPE)
+    p = Popen("python {} < {}".format(reducer_file, input_file), shell=True, stdin=PIPE, stdout=PIPE)
     #p = Popen(["python", reducer_file],  stdin=PIPE, stdout=PIPE)
     output, err = p.communicate()
+    Popen.kill(p)
     print("output, err =", output, err)
     res = output.decode('utf-8')
     print("res -",res)
+    print(res.split())
     # for i in file_list:
     #     #for line in f:
     #     p = Popen(["python", reducer_file],  stdin=PIPE, stdout=PIPE)
@@ -121,6 +131,7 @@ def reduce(input_file, reducer_file):
     #     res = res.split("\n")
     #     res2.append(res)
     # print("res2 =", res2)
+    print(res)
     for val in res:
         red_output.write(val)
         #d.write("\n")
